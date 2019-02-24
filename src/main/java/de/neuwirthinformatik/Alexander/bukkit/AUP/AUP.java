@@ -1,7 +1,10 @@
 package de.neuwirthinformatik.Alexander.bukkit.AUP;
 
+import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -21,6 +24,17 @@ public class AUP extends JavaPlugin
 	
 	public void update()
 	{
+		File d = new File(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator());
+		File[] pl = d.listFiles();
+		for (File  f : pl)
+		{
+			if(f.getName().startsWith(this.getDescription().getName()) && !f.getName().endsWith(getDescription().getVersion() + ".jar"))
+			{
+				this.logMessage(f.getName() + " del:" + f.delete());
+			}
+		}
+		logMessage(""+d.delete());
+		
 		String json = Wget.wGet("https://" + "api." + this.getDescription().getWebsite().replaceAll("github.com/", "github.com/repos/") + "/releases/latest").replaceAll("\n", "");
 		JSONObject jso = new JSONObject(json);
 		String tag_name = jso.getString("tag_name");
@@ -28,9 +42,15 @@ public class AUP extends JavaPlugin
 		{
 			//update
 			String name = this.getDescription().getName() + "-" + tag_name + ".jar";
-			Wget.wGet(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator()+ name ,"https://" + this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + name);
+			String nw = getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator()+ name;
+			String old = getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator()+ this.getDescription().getName() + "-" + getDescription().getVersion() + ".jar";
+			Wget.wGet(nw ,"https://" + this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + name);
 			this.logMessage("Downloading AUP " + name);
-			this.logMessage(getDataFolder().getParentFile().getAbsolutePath() + FileSystems.getDefault().getSeparator() + name);
+			this.logMessage(nw);
+			//Bukkit.getServer().getPluginManager().loadPlugin(nw);
+			//Bukkit.getServer().getPluginManager().un
+			Bukkit.getServer().reload();
+			
 		}
 		else
 		{
