@@ -12,7 +12,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
 
@@ -26,6 +30,13 @@ public class AUP extends JavaPlugin
 	{
 		File d = new File(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator());
 		File[] pl = d.listFiles();
+		for(Plugin p : Bukkit.getServer().getPluginManager().getPlugins())
+		{
+			if(p.getDescription().getName().equals(getDescription().getName()) && !p.getDescription().getVersion().equals(getDescription().getVersion()))
+			{
+				Bukkit.getServer().getPluginManager().disablePlugin(p);
+			}
+		}
 		for (File  f : pl)
 		{
 			if(f.getName().startsWith(this.getDescription().getName()) && !f.getName().endsWith(getDescription().getVersion() + ".jar"))
@@ -47,7 +58,9 @@ public class AUP extends JavaPlugin
 			Wget.wGet(nw ,"https://" + this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + name);
 			this.logMessage("Downloading AUP " + name);
 			this.logMessage(nw);
-			//Bukkit.getServer().getPluginManager().loadPlugin(nw);
+			
+			//Bukkit.getServer().getPluginManager().loadPlugin(new File(nw));
+			
 			//Bukkit.getServer().getPluginManager().un
 			Bukkit.getServer().reload();
 			
