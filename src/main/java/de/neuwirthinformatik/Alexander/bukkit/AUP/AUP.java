@@ -24,6 +24,7 @@ public class AUP extends JavaPlugin
 		String tag_name = jso.getString("tag_name");
 		if(!tag_name.equals(this.getDescription().getVersion()))
 		{
+			this.logMessage("Downloading AUP " + tag_name);
 			//update
 			Wget.wGet(getDataFolder().getAbsolutePath() + "/../" + this.getDescription().getName(), this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + this.getDescription().getName() + "-" + this.getDescription().getVersion());
 		}
