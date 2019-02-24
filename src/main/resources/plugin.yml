@@ -2,6 +2,7 @@ name: AUP
 version: {{version}}
 author: APN-Pucky
 main: de.neuwirthinformatik.Alexander.bukkit.AUP.AUP
+website: https://api.github.com/repos/APN-Pucky/AutoUpdatePlugin
 commands:
     helloworld:
         description: Hello World.
