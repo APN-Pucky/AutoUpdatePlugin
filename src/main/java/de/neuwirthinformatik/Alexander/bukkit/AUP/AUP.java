@@ -30,11 +30,12 @@ public class AUP extends JavaPlugin
 	{
 		File d = new File(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator());
 		File[] pl = d.listFiles();
+		//TDOO check for highest + dirty version
 		for(Plugin p : Bukkit.getServer().getPluginManager().getPlugins())
 		{
 			if(p.getDescription().getName().equals(getDescription().getName()) && !p.getDescription().getVersion().equals(getDescription().getVersion()))
 			{
-				Bukkit.getServer().getPluginManager().disablePlugin(p);
+				PluginUtil.unload(p);
 			}
 		}
 		for (File  f : pl)
