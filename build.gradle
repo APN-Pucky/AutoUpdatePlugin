@@ -33,17 +33,21 @@ targetCompatibility = "1.8"
 configurations {
   shade
   compile.extendsFrom shade
+  provided
+  // Make compile extend from our provided configuration so that things added to bundled end up on the compile classpath
+  compile.extendsFrom(provided)
 }
 
 // Use the shade configuration to include the dependency's class files in your final JAR
 
 dependencies {
   compile "org.bukkit:bukkit:+"
-  compile group: 'org.json', name: 'json', version: '+'
+  provided group: 'org.json', name: 'json', version: '+'
   // shade "org.somewebsite:some-dependency:version"
 }
 
 jar {
+
 	eachFile { copyDetails ->
         if (copyDetails.path == 'plugin.yml') {
             filter { line ->
@@ -51,10 +55,14 @@ jar {
             }
         }
     }
+    
+  from configurations.provided.asFileTree.files.collect { zipTree(it) }
+  
   configurations.shade.each { dep ->
     from(project.zipTree(dep)) {
       exclude 'META-INF', 'META-INF/**'
     }
   }
+  
 }
 
