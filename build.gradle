@@ -51,7 +51,7 @@ jar {
 	eachFile { copyDetails ->
         if (copyDetails.path == 'plugin.yml') {
             filter { line ->
-                line.replace('{{version}}', version)
+                line.replace('{{version}}', version).replace('{{name}}', rootProject.name)
             }
         }
     }

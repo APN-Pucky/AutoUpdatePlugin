@@ -1,5 +1,7 @@
 package de.neuwirthinformatik.Alexander.bukkit.AUP;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -19,14 +21,16 @@ public class AUP extends JavaPlugin
 	
 	public void update()
 	{
-		String json = Wget.wGet(this.getDescription().getWebsite() + "/releases/latest").replaceAll("\n", "");
+		String json = Wget.wGet("https://" + "api." + this.getDescription().getWebsite().replaceAll("github.com/", "github.com/repos/") + "/releases/latest").replaceAll("\n", "");
 		JSONObject jso = new JSONObject(json);
 		String tag_name = jso.getString("tag_name");
 		if(!tag_name.equals(this.getDescription().getVersion()))
 		{
-			this.logMessage("Downloading AUP " + tag_name);
 			//update
-			Wget.wGet(getDataFolder().getAbsolutePath() + "/../" + this.getDescription().getName(), this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + this.getDescription().getName() + "-" + this.getDescription().getVersion());
+			String name = this.getDescription().getName() + "-" + tag_name + ".jar";
+			Wget.wGet(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator()+ name ,"https://" + this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + name);
+			this.logMessage("Downloading AUP " + name);
+			this.logMessage(getDataFolder().getParentFile().getAbsolutePath() + FileSystems.getDefault().getSeparator() + name);
 		}
 		else
 		{

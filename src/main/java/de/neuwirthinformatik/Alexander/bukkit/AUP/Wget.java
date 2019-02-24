@@ -3,6 +3,7 @@ package de.neuwirthinformatik.Alexander.bukkit.AUP;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -108,6 +109,8 @@ public class Wget {
 		OutputStream fileOutput = null;
 		OutputStream bufferedOut = null;
 		try {
+			File yourFile = new File(saveAsFile);
+			yourFile.createNewFile(); 
 			// check the http connection before we do anything to the fs
 			httpIn = new BufferedInputStream(new URL(urlOfFile).openStream());
 			// prep saving the file
@@ -128,7 +131,7 @@ public class Wget {
 			e.printStackTrace();
 			return Wget.Status.MalformedUrl;
 		} catch (IOException e) {
-			if(!(e instanceof FileNotFoundException))e.printStackTrace();
+			e.printStackTrace();
 			return Wget.Status.IoException;
 		} finally {
 			try {
