@@ -8,7 +8,8 @@ deploy:
   name: "${TRAVIS_COMMIT_MESSAGE}"
   api_key:
     secure: UudWmL1DAaHYHyyjnrKtMWvN6zYBcOnZmJpEuIfuPV0NWlEc4y4/+tCeYj44J4irnxCHh/qERnb7ejKNafss0FCkJvyJAjKM0YrVczPg8Xtx+F4pklLyBCQyC8WkruGNYqtROXMUa47p/R3o8qOisEPwsC6cf27FifytojKhw493jmtCySqs7GJoDz2C6lTh3Hb2f2ONPlRXCuYOdhnLhd3UXvNhoIJFdOSUzbsgL8MEE8r/6FKxmSU9cMYKIqYO0Ma09wbuxRP72pzWzTYrbJsXmyksU/nC1zPF/B76B/lNSAk7Nxe7EftG4n9KGjniukdEPZA4BhGhipcEU5a3c8e7SEmptz2dzsOoc2LN/x7+mcC/Ulkm6bKb/752Q9iJoQUDUWKVWd3UqQ2yRbmIpN4uUYMLCwYsn9Q3ynMecZDjjlWyrnvKShOaY32VR9wzWa7Q1glQ7Owj8F02E8vEyzw+1CrH5jJpA56B5wW5Svqkxg/i+ZhRD9lKUidkzo5CM0Hj/Af0wwMcH6zs3ydRL8WajYijLR4hfc0S4aG5JVckx5LayQiDL6Pn3QHqmNNYPFSeXJvbKevxd+Qq++2XLXQwoPAPrvx8VU313Wity4Yzt2keOvYXhMbI2ikD+3Rn8j4sNVmtPqeh6weFF0Q+XJnqdDz2wqaYHkZsjjkqg5c=
-  file: build/libs/*.jar
+  file_glob: true
+  file: build/libs/*
   skip_cleanup: true
   on:
     tags: true
