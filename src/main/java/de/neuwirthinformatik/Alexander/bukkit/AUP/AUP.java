@@ -5,6 +5,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -26,26 +27,47 @@ public class AUP extends JavaPlugin
 {
 	private Logger log = Logger.getLogger("Minecraft");
 	
+
+
+	private File getLatestFilefromDir(File[] files){
+	    if (files == null || files.length == 0) {
+	        return null;
+	    }
+	
+	    File lastModifiedFile = files[0];
+	    for (int i = 1; i < files.length; i++) {
+	       if (lastModifiedFile.lastModified() < files[i].lastModified()) {
+	           lastModifiedFile = files[i];
+	       }
+	    }
+	    return lastModifiedFile;
+	}
+
+
+	
 	public void update()
 	{
 		File d = new File(getDataFolder().getParentFile().getAbsolutePath() +FileSystems.getDefault().getSeparator());
+		String nm = getDescription().getName();
+		File nn = getLatestFilefromDir(Arrays.stream(d.listFiles()).filter(p -> p.getName().startsWith(nm)).toArray(File[]::new));
+		String vrsn = nn.getName().replaceAll(nm + "-", "").replaceAll(".jar", "");
+		this.logMessage("Latest: " + vrsn);
 		File[] pl = d.listFiles();
 		//TDOO check for highest + dirty version
 		for(Plugin p : Bukkit.getServer().getPluginManager().getPlugins())
 		{
-			if(p.getDescription().getName().equals(getDescription().getName()) && !p.getDescription().getVersion().equals(getDescription().getVersion()))
+			if(p.getDescription().getName().equals(getDescription().getName()) && !p.getDescription().getVersion().equals(vrsn))
 			{
-				PluginUtil.unload(p);
+				//PluginUtil.unload(p);
 			}
 		}
 		for (File  f : pl)
 		{
-			if(f.getName().startsWith(this.getDescription().getName()) && !f.getName().endsWith(getDescription().getVersion() + ".jar"))
+			if(f.getName().startsWith(this.getDescription().getName()) && !f.getName().endsWith(vrsn + ".jar"))
 			{
 				this.logMessage(f.getName() + " del:" + f.delete());
 			}
 		}
-		logMessage(""+d.delete());
 		
 		String json = Wget.wGet("https://" + "api." + this.getDescription().getWebsite().replaceAll("github.com/", "github.com/repos/") + "/releases/latest").replaceAll("\n", "");
 		JSONObject jso = new JSONObject(json);
@@ -60,7 +82,13 @@ public class AUP extends JavaPlugin
 			this.logMessage("Downloading AUP " + name);
 			this.logMessage(nw);
 			
-			//Bukkit.getServer().getPluginManager().loadPlugin(new File(nw));
+			/*PluginUtil.unload(this);
+			try {
+				Bukkit.getServer().getPluginManager().loadPlugin(new File(nw));
+			} catch (UnknownDependencyException | InvalidPluginException | InvalidDescriptionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 			
 			//Bukkit.getServer().getPluginManager().un
 			Bukkit.getServer().reload();

@@ -1,6 +1,6 @@
 package de.neuwirthinformatik.Alexander.bukkit.AUP;
 /*
- * https://github.com/r-clancy/PlugMan/blob/master/src/main/java/com/rylinaux/plugman/util/StringUtil.java
+ * https://github.com/r-clancy/PlugMan/blob/master/src/main/java/com/rylinaux/plugman/util/PluginUtil.java
  */
 /*
  * #%L
