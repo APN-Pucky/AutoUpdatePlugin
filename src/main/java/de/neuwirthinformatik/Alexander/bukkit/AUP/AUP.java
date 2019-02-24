@@ -28,6 +28,11 @@ public class AUP extends JavaPlugin
 			//update
 			Wget.wGet(getDataFolder().getAbsolutePath() + "/../" + this.getDescription().getName(), this.getDescription().getWebsite() + "/releases/download/"+tag_name+"/" + this.getDescription().getName() + "-" + this.getDescription().getVersion());
 		}
+		else
+		{
+			this.logMessage("Not Downloading AUP " + tag_name);
+			
+		}
 	}
 	
 	
