@@ -1,0 +1,59 @@
+apply plugin: "java"
+
+buildscript {
+  ext.bukkit_version = "1.13.2-R0.1-SNAPSHOT"
+}
+
+repositories {
+  mavenCentral()
+  maven {
+    url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+  }
+}
+def getGitVersion = {
+    def hashStdOut = new ByteArrayOutputStream()
+    exec {
+        workingDir projectDir.getAbsolutePath()
+        commandLine 'git', 'describe', '--tags', '--abbrev=0', '--dirty'
+        standardOutput = hashStdOut
+    }
+    return hashStdOut.toString().trim()
+}
+task info {
+	doLast {
+		println version
+		println jar.archivePath
+	}
+}
+version = getGitVersion()
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+configurations {
+  shade
+  compile.extendsFrom shade
+}
+
+// Use the shade configuration to include the dependency's class files in your final JAR
+
+dependencies {
+  compile "org.bukkit:bukkit:$bukkit_version"
+  // shade "org.somewebsite:some-dependency:version"
+}
+
+jar {
+	eachFile { copyDetails ->
+        if (copyDetails.path == 'plugin.yml') {
+            filter { line ->
+                line.replace('{{version}}', version)
+            }
+        }
+    }
+  configurations.shade.each { dep ->
+    from(project.zipTree(dep)) {
+      exclude 'META-INF', 'META-INF/**'
+    }
+  }
+}
+

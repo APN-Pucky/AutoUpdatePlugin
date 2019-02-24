@@ -1,0 +1,9 @@
+name: AUP
+version: {{version}}
+author: APN-Pucky
+main: de.neuwirthinformatik.Alexander.bukkit.AUP.AUP
+commands:
+    helloworld:
+        description: Hello World.
+        aliases: [hw]
+        usage: /helloworld
